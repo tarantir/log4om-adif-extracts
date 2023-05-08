@@ -99,8 +99,7 @@ def do_standard_adif():
     '''
     This section generates a standard ADIF output
     '''
-    S_ADIF_QUERY = 'Select * from v_standard_adif;'
-    s_adif_result = pd.read_sql_query(S_ADIF_QUERY,do_db_connect())
+    s_adif_result = pd.read_sql_query('Select * from v_standard_adif;',do_db_connect())
     s_adif = s_adif_result["ADIF"]
     s_adif_count = pd.DataFrame.count(s_adif_result)
     s_adif.to_csv(
@@ -117,8 +116,7 @@ def do_wsjtx_adif():
     '''
     This section generates a ADIF specifically for WSJTX; databae view is filtered by mode = FT8
     '''
-    W_ADIF_QUERY = 'Select * from v_wsjtx_adif;'
-    w_adif_result = pd.read_sql_query(W_ADIF_QUERY,do_db_connect())
+    w_adif_result = pd.read_sql_query('Select * from v_wsjtx_adif;',do_db_connect())
     w_adif = w_adif_result["ADIF"]
     w_adif_count = pd.DataFrame.count(w_adif_result)
     w_adif.to_csv(
@@ -135,8 +133,7 @@ def do_wsjtx_log():
     '''
     This section generates a log file specifically for WSJTX; databse view is filtered by mode = FT8
     '''
-    W_LOG_QUERY = 'Select * from v_wsjtx_log;'
-    w_log = pd.read_sql_query(W_LOG_QUERY,do_db_connect())
+    w_log = pd.read_sql_query('Select * from v_wsjtx_log;',do_db_connect())
     w_log_count = pd.DataFrame.count(w_log)
     w_log.to_csv(
         W_LOG_PATH,
