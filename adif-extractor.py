@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''
+"""
  Extracts Standard ADIF structure from Log4om2 Database
  Version: 20230506
 
@@ -34,7 +34,7 @@
  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  OR OTHER DEALINGS IN THE SOFTWARE.
  
-'''
+"""
 
 import csv
 import os
@@ -43,63 +43,78 @@ import getpass
 import pandas as pd
 import mysql.connector as connection
 
-DBHOST = ''
-DBNAME = ''
-DBUSER = ''
-DBPASS = ''
-S_ADIF_PATH = ''
-W_ADIF_PATH = ''
-W_LOG_PATH = ''
+DBHOST = ""
+DBNAME = ""
+DBUSER = ""
+DBPASS = ""
+S_ADIF_PATH = ""
+W_ADIF_PATH = ""
+W_LOG_PATH = ""
 USER_HOME = os.path.expanduser("~")
 APP_CONFIG_DIR = os.path.join(USER_HOME, ".adifexporter")
-APP_CONFIG = os.path.join(APP_CONFIG_DIR,"config")
+APP_CONFIG = os.path.join(APP_CONFIG_DIR, "config")
 
-if not os.path.isdir(APP_CONFIG_DIR) :
+if not os.path.isdir(APP_CONFIG_DIR):
     os.makedirs(APP_CONFIG_DIR)
 
 config = configparser.ConfigParser()
 
 try:
     config.read(APP_CONFIG)
-    DBHOST = config['GENERAL']['DBHOST']
-    DBNAME = config['GENERAL']['DBNAME']
-    DBUSER = config['GENERAL']['DBUSER']
-    S_ADIF_PATH = config['GENERAL']['S_ADIF_PATH']
-    W_ADIF_PATH = config['GENERAL']['W_ADIF_PATH']
-    W_LOG_PATH = config['GENERAL']['W_LOG_PATH']
+    DBHOST = config["GENERAL"]["DBHOST"]
+    DBNAME = config["GENERAL"]["DBNAME"]
+    DBUSER = config["GENERAL"]["DBUSER"]
+    S_ADIF_PATH = config["GENERAL"]["S_ADIF_PATH"]
+    W_ADIF_PATH = config["GENERAL"]["W_ADIF_PATH"]
+    W_LOG_PATH = config["GENERAL"]["W_LOG_PATH"]
 except Exception as e:
     print(str(e))
 
-if DBHOST == '' or DBNAME == '' or DBUSER == '' or S_ADIF_PATH == '' or W_ADIF_PATH == '' or W_LOG_PATH == '':
-    print ("Configuration")
+if (
+    DBHOST == ""
+    or DBNAME == ""
+    or DBUSER == ""
+    or S_ADIF_PATH == ""
+    or W_ADIF_PATH == ""
+    or W_LOG_PATH == ""
+):
+    print("Configuration")
     DBHOST = input("DBHOST : ")
     DBNAME = input("DBNAME : ")
     DBUSER = input("DBUSER : ")
     S_ADIF_PATH = input("Standard ADIF Extract File (e.g. /ADIF/STDADIF.adi) : ")
     W_ADIF_PATH = input("Standard ADIF Extract File (e.g. /ADIF/wsjtx.adi) : ")
     W_LOG_PATH = input("Standard ADIF Extract File (e.g. /ADIF/wsjtx.log) : ")
-    print ("Save config to ", APP_CONFIG)
-    config.add_section('GENERAL')
-    config.set('GENERAL', 'DBHOST', DBHOST)
-    config.set('GENERAL', 'DBNAME', DBNAME)
-    config.set('GENERAL', 'DBUSER', DBUSER)
-    config.set('GENERAL', 'S_ADIF_PATH', S_ADIF_PATH)
-    config.set('GENERAL', 'W_ADIF_PATH', W_ADIF_PATH)
-    config.set('GENERAL', 'W_LOG_PATH', W_LOG_PATH)
-    config.write(open(APP_CONFIG, 'w'))
+    print("Save config to ", APP_CONFIG)
+    config.add_section("GENERAL")
+    config.set("GENERAL", "DBHOST", DBHOST)
+    config.set("GENERAL", "DBNAME", DBNAME)
+    config.set("GENERAL", "DBUSER", DBUSER)
+    config.set("GENERAL", "S_ADIF_PATH", S_ADIF_PATH)
+    config.set("GENERAL", "W_ADIF_PATH", W_ADIF_PATH)
+    config.set("GENERAL", "W_LOG_PATH", W_LOG_PATH)
+    config.write(open(APP_CONFIG, "w"))
 
-print("\033[1;36;40m[Database]:\033[0;37;40m",DBNAME,"\033[1;36;40m[Host]:\033[0;37;40m",DBHOST,"\033[1;36;40m[User]:\033[0;37;40m",DBUSER)
+print(
+    "\033[1;36;40m[Database]:\033[0;37;40m",
+    DBNAME,
+    "\033[1;36;40m[Host]:\033[0;37;40m",
+    DBHOST,
+    "\033[1;36;40m[User]:\033[0;37;40m",
+    DBUSER,
+)
 DBPASS = getpass.getpass()
 
-if DBPASS == '':
+if DBPASS == "":
     print("No password provided, exiting")
     exit()
 
+
 def do_standard_adif():
-    '''
+    """
     This section generates a standard ADIF output
-    '''
-    s_adif_result = pd.read_sql_query('Select * from v_standard_adif;',do_db_connect())
+    """
+    s_adif_result = pd.read_sql_query("Select * from v_standard_adif;", do_db_connect())
     s_adif = s_adif_result["ADIF"]
     s_adif_count = pd.DataFrame.count(s_adif_result)
     s_adif.to_csv(
@@ -108,15 +123,16 @@ def do_standard_adif():
         index=False,
         quoting=csv.QUOTE_NONE,
         quotechar="",
-        escapechar="\\"
-        )
-    print('Exported Standard ADIF Rows:', s_adif_count["ADIF"])
+        escapechar="\\",
+    )
+    print("Exported Standard ADIF Rows:", s_adif_count["ADIF"])
+
 
 def do_wsjtx_adif():
-    '''
+    """
     This section generates a ADIF specifically for WSJTX; databae view is filtered by mode = FT8
-    '''
-    w_adif_result = pd.read_sql_query('Select * from v_wsjtx_adif;',do_db_connect())
+    """
+    w_adif_result = pd.read_sql_query("Select * from v_wsjtx_adif;", do_db_connect())
     w_adif = w_adif_result["ADIF"]
     w_adif_count = pd.DataFrame.count(w_adif_result)
     w_adif.to_csv(
@@ -125,15 +141,16 @@ def do_wsjtx_adif():
         index=False,
         quoting=csv.QUOTE_NONE,
         quotechar="",
-        escapechar="\\"
-        )
-    print('Exported WSJTX ADIF Rows:', w_adif_count["ADIF"])
+        escapechar="\\",
+    )
+    print("Exported WSJTX ADIF Rows:", w_adif_count["ADIF"])
+
 
 def do_wsjtx_log():
-    '''
+    """
     This section generates a log file specifically for WSJTX; databse view is filtered by mode = FT8
-    '''
-    w_log = pd.read_sql_query('Select * from v_wsjtx_log;',do_db_connect())
+    """
+    w_log = pd.read_sql_query("Select * from v_wsjtx_log;", do_db_connect())
     w_log_count = pd.DataFrame.count(w_log)
     w_log.to_csv(
         W_LOG_PATH,
@@ -141,19 +158,17 @@ def do_wsjtx_log():
         index=False,
         quoting=csv.QUOTE_NONE,
         quotechar="",
-        escapechar="\\"
-        )
-    print('Exported WSJTX Log Rows:', w_log_count["QSODateOn"])
+        escapechar="\\",
+    )
+    print("Exported WSJTX Log Rows:", w_log_count["QSODateOn"])
+
 
 def do_db_connect():
     mydb = connection.connect(
-        host=DBHOST,
-        database=DBNAME,
-        user=DBUSER,
-        passwd=DBPASS,
-        use_pure=True
-        )
+        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
+    )
     return mydb
+
 
 do_standard_adif()
 do_wsjtx_adif()
