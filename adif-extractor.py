@@ -70,7 +70,7 @@ try:
 except Exception as e:
     print(str(e))
 
-if DBHOST == '' or DBNAME == '' or DBUSER == ''  or S_ADIF_PATH == ''  or W_ADIF_PATH == ''   or W_LOG_PATH == '':
+if DBHOST == '' or DBNAME == '' or DBUSER == '' or S_ADIF_PATH == '' or W_ADIF_PATH == '' or W_LOG_PATH == '':
     print ("Configuration")
     DBHOST = input("DBHOST : ")
     DBNAME = input("DBNAME : ")
@@ -88,7 +88,7 @@ if DBHOST == '' or DBNAME == '' or DBUSER == ''  or S_ADIF_PATH == ''  or W_ADIF
     config.set('GENERAL', 'W_LOG_PATH', W_LOG_PATH)
     config.write(open(APP_CONFIG, 'w'))
 
-print("[Database]:",DBNAME,"[Host]:",DBHOST,"[User]:",DBUSER)
+print("\033[1;36;40m[Database]:\033[0;37;40m",DBNAME,"\033[1;36;40m[Host]:\033[0;37;40m",DBHOST,"\033[1;36;40m[User]:\033[0;37;40m",DBUSER)
 DBPASS = getpass.getpass()
 
 if DBPASS == '':
