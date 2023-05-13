@@ -21,15 +21,27 @@ select
     ' <DISTANCE:', octet_length(`l`.`distance`), '>', `l`.`distance`, 
     ' <DXCC:', octet_length(`l`.`dxcc`), '>', `l`.`dxcc`, 
     ' <EMAIL', octet_length(`l`.`email`), '>', `l`.`email`, 
-    ' <EQSL_QSLRDATE:', octet_length(`q`.`eqslrcvddate`), '>', `q`.`eqslrcvddate`, 
-    ' <EQSL_QSLSDATE:', octet_length(`q`.`eqslsentdate`), '>', `q`.`eqslsentdate`, 
+    case 
+        when `q`.`eqslrcvddate` <> '' then CONCAT(' <EQSL_QSLRDATE:', octet_length(`q`.`eqslrcvddate`), '>', `q`.`eqslrcvddate`)
+        else '' 
+    end,
+    case 
+        when `q`.`eqslsentdate` <> '' then CONCAT(' <EQSL_QSLSDATE:', octet_length(`q`.`eqslsentdate`), '>', `q`.`eqslsentdate`)
+        else '' 
+    end,
     ' <EQSL_QSL_RCVD:', octet_length(`q`.`eqslrcvd`), '>', `q`.`eqslrcvd`, 
     ' <EQSL_QSL_SENT:', octet_length(`q`.`eqslsent`), '>', `q`.`eqslsent`, 
     ' <FREQ:', octet_length(round(`l`.`freq` / 1000, 6)), '>', round(`l`.`freq` / 1000, 6), 
     ' <GRIDSQUARE:', octet_length(`l`.`gridsquare`), '>', `l`.`gridsquare`, 
     ' <ITUZ:', octet_length(`l`.`ituzone`), '>', `l`.`ituzone`, 
-    ' <LOTW_QSLRDATE:', octet_length(`q`.`lotwrcvddate`), '>', `q`.`lotwrcvddate`, 
-    ' <LOTW_QSLSDATE:', octet_length(`q`.`lotwsentdate`), '>', `q`.`lotwsentdate`, 
+    case
+        when `q`.`lotwsentdate` <> '' then CONCAT(' <LOTW_QSLRDATE:', octet_length(`q`.`lotwrcvddate`), '>', `q`.`lotwrcvddate`)
+        else '' 
+    end, 
+    case
+        when `q`.`lotwsentdate` <> '' then CONCAT(' <LOTW_QSLSDATE:', octet_length(`q`.`lotwsentdate`), '>', `q`.`lotwsentdate`) 
+        else '' 
+    end,
     ' <LOTW_QSL_RCVD:', octet_length(`q`.`lotwrcvd`), '>', `q`.`lotwrcvd`, 
     ' <LOTW_QSL_SENT:', octet_length(`q`.`lotwsent`), '>', `q`.`lotwsent`, 
     ' <MY_CITY:', octet_length(`l`.`mycity`), '>', `l`.`mycity`, 
@@ -70,13 +82,25 @@ select
     ' <PFX:', octet_length(`l`.`pfx`), '>', `l`.`pfx`, 
     ' <QSO_RANDOM:', octet_length(replace(replace(`l`.`qsorandom`, '1', 'Y'), '0', 'N')), '>', replace(replace(`l`.`qsorandom`, '1', 'Y'), '0', 'N'), 
     ' <SFI:', octet_length(`l`.`sfi`), '>', `l`.`sfi`, 
-    ' <CLUBLOG_QSO_UPLOAD_DATE:', octet_length(`q`.`clublogsentdate`), '>', `q`.`clublogsentdate`, 
+    case 
+        when `q`.`clublogsentdate` <> '' then CONCAT(' <CLUBLOG_QSO_UPLOAD_DATE:', octet_length(`q`.`clublogsentdate`), '>', `q`.`clublogsentdate`) 
+        else '' 
+    end, 
     ' <CLUBLOG_QSO_UPLOAD_STATUS:', octet_length(`q`.`clublogsent`), '>', `q`.`clublogsent`, 
-    ' <HRDLOG_QSO_UPLOAD_DATE:', octet_length(`q`.`hrdlogsentdate`), '>', `q`.`hrdlogsentdate`, 
+    case
+        when `q`.`hrdlogsentdate` <> '' then CONCAT(' <HRDLOG_QSO_UPLOAD_DATE:', octet_length(`q`.`hrdlogsentdate`), '>', `q`.`hrdlogsentdate`) 
+        else '' 
+    end, 
     ' <HRDLOG_QSO_UPLOAD_STATUS:', octet_length(`q`.`hrdlogsent`), '>', `q`.`hrdlogsent`, 
-    ' <QRZCOM_QSO_UPLOAD_DATE:', octet_length(`q`.`qrzsentdate`), '>', `q`.`qrzsentdate`, 
+    case
+        when `q`.`qrzsentdate` <> '' then CONCAT(' <QRZCOM_QSO_UPLOAD_DATE:', octet_length(`q`.`qrzsentdate`), '>', `q`.`qrzsentdate`) 
+        else '' 
+    end, 
     ' <QRZCOM_QSO_UPLOAD_STATUS:', octet_length(`q`.`qrzsent`), '>', `q`.`qrzsent`, 
-    ' <HAMQTH_QSO_UPLOAD_DATE:', octet_length(`q`.`hamqthsentdate`), '>', `q`.`hamqthsentdate`, 
+    case
+        when `q`.`hamqthsentdate` <> '' then CONCAT(' <HAMQTH_QSO_UPLOAD_DATE:', octet_length(`q`.`hamqthsentdate`), '>', `q`.`hamqthsentdate`) 
+        else '' 
+    end,
     ' <HAMQTH_QSO_UPLOAD_STATUS:', octet_length(`q`.`hamqthsent`), '>', `q`.`hamqthsent`, 
     ' <EOR>') AS `ADIF`
 from
