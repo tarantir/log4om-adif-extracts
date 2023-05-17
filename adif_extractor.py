@@ -109,66 +109,68 @@ if DBPASS == "":
     print("No password provided, exiting")
     exit()
 
-
 def do_standard_adif():
     """
     This section generates a standard ADIF output
     """
-    s_adif_result = pd.read_sql_query("Select * from v_standard_adif;", do_db_connect())
-    s_adif = s_adif_result["ADIF"]
-    s_adif_count = pd.DataFrame.count(s_adif_result)
-    s_adif.to_csv(
-        S_ADIF_PATH,
-        header=False,
-        index=False,
-        quoting=csv.QUOTE_NONE,
-        quotechar="",
-        escapechar="\\",
+    mydb = connection.connect(
+        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
     )
-    print("Exported Standard ADIF Rows:", s_adif_count["ADIF"])
-
+    s_cursor = mydb.cursor()
+    s_adif = s_cursor.execute("Select ADIF from v_standard_adif")
+    s_adif = s_cursor.fetchall()
+    with open(S_ADIF_PATH, 'w') as f:
+        for row in s_adif:
+            row = str(row)
+            row = row[2:]
+            row = row[:-3]
+            f.write(row)
+            f.write('\n')
+    #print("Exported Standard ADIF Rows:", s_adif_count["ADIF"])
 
 def do_wsjtx_adif():
     """
     This section generates a ADIF specifically for WSJTX; databae view is filtered by mode = FT8
     """
-    w_adif_result = pd.read_sql_query("Select * from v_wsjtx_adif;", do_db_connect())
-    w_adif = w_adif_result["ADIF"]
-    w_adif_count = pd.DataFrame.count(w_adif_result)
-    w_adif.to_csv(
-        W_ADIF_PATH,
-        header=False,
-        index=False,
-        quoting=csv.QUOTE_NONE,
-        quotechar="",
-        escapechar="\\",
+    mydb = connection.connect(
+        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
     )
-    print("Exported WSJTX ADIF Rows:", w_adif_count["ADIF"])
-
+    s_cursor = mydb.cursor()
+    w_adif = s_cursor.execute("Select ADIF from v_wsjtx_adif")
+    w_adif = s_cursor.fetchall()
+    with open(W_ADIF_PATH, 'w') as f:
+        for row in w_adif:
+            row = str(row)
+            row = row[2:]
+            row = row[:-3]
+            f.write(row)
+            f.write('\n')
+    #print("Exported WSJTX ADIF Rows:", w_adif_count["ADIF"])
 
 def do_wsjtx_log():
     """
     This section generates a log file specifically for WSJTX; databse view is filtered by mode = FT8
     """
-    w_log = pd.read_sql_query("Select * from v_wsjtx_log;", do_db_connect())
-    w_log_count = pd.DataFrame.count(w_log)
-    w_log.to_csv(
-        W_LOG_PATH,
-        header=False,
-        index=False,
-        quoting=csv.QUOTE_NONE,
-        quotechar="",
-        escapechar="\\",
+    mydb = connection.connect(
+        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
     )
-    print("Exported WSJTX Log Rows:", w_log_count["QSODateOn"])
-
+    s_cursor = mydb.cursor()
+    w_log = s_cursor.execute("Select * from v_wsjtx_log")
+    w_log = s_cursor.fetchall()
+    with open(W_LOG_PATH, 'w') as f:
+        for row in w_log:
+            row = str(row)
+            row = row[2:]
+            row = row[:-3]
+            f.write(row)
+            f.write('\n')
+    #print("Exported WSJTX Log Rows:", w_log_count["QSODateOn"])
 
 def do_db_connect():
     mydb = connection.connect(
         host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
     )
     return mydb
-
 
 do_standard_adif()
 do_wsjtx_adif()
