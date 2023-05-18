@@ -69,7 +69,7 @@ select
         else ''
     end,
     case
-        when octet_length(`l`.`email`) > 0 then CONCAT(' <EMAIL', octet_length(`l`.`email`), '>', `l`.`email`)
+        when octet_length(`l`.`email`) > 0 then CONCAT(' <EMAIL:', octet_length(`l`.`email`), '>', `l`.`email`)
         else ''
     end,
     case
