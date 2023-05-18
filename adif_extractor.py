@@ -40,7 +40,7 @@ import csv
 import os
 import configparser
 import getpass
-import pandas as pd
+#import pandas as pd
 import mysql.connector as connection
 
 DBHOST = ""
@@ -113,58 +113,43 @@ def do_standard_adif():
     """
     This section generates a standard ADIF output
     """
-    mydb = connection.connect(
-        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
-    )
+    mydb = do_db_connect()
     s_cursor = mydb.cursor()
     s_adif = s_cursor.execute("Select ADIF from v_standard_adif")
     s_adif = s_cursor.fetchall()
-    with open(S_ADIF_PATH, 'w') as f:
+    with open(S_ADIF_PATH, 'w') as f_out:
         for row in s_adif:
-            row = str(row)
-            row = row[2:]
-            row = row[:-3]
-            f.write(row)
-            f.write('\n')
-    #print("Exported Standard ADIF Rows:", s_adif_count["ADIF"])
+            row = str(row).strip('(\'').strip('\'\,)')
+            f_out.write('%s\n' % row)
+    print("Exported Standard ADIF Rows:", len(s_adif))
 
 def do_wsjtx_adif():
     """
     This section generates a ADIF specifically for WSJTX; databae view is filtered by mode = FT8
     """
-    mydb = connection.connect(
-        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
-    )
+    mydb = do_db_connect()
     s_cursor = mydb.cursor()
     w_adif = s_cursor.execute("Select ADIF from v_wsjtx_adif")
     w_adif = s_cursor.fetchall()
-    with open(W_ADIF_PATH, 'w') as f:
+    with open(W_ADIF_PATH, 'w') as f_out:
         for row in w_adif:
-            row = str(row)
-            row = row[2:]
-            row = row[:-3]
-            f.write(row)
-            f.write('\n')
-    #print("Exported WSJTX ADIF Rows:", w_adif_count["ADIF"])
+            row = str(row).strip('(\'').strip('\'\,)')
+            f_out.write('%s\n' % row)
+    print("Exported WSJTX ADIF Rows:", len(w_adif))
 
 def do_wsjtx_log():
     """
     This section generates a log file specifically for WSJTX; databse view is filtered by mode = FT8
     """
-    mydb = connection.connect(
-        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
-    )
+    mydb = do_db_connect()
     s_cursor = mydb.cursor()
     w_log = s_cursor.execute("Select * from v_wsjtx_log")
     w_log = s_cursor.fetchall()
-    with open(W_LOG_PATH, 'w') as f:
+    with open(W_LOG_PATH, 'w', newline='') as f_out:
         for row in w_log:
-            row = str(row)
-            row = row[2:]
-            row = row[:-3]
-            f.write(row)
-            f.write('\n')
-    #print("Exported WSJTX Log Rows:", w_log_count["QSODateOn"])
+            s_csv = csv.writer(f_out)
+            s_csv.writerow(row)
+    print("Exported WSJTX Log Rows:", len(w_log))
 
 def do_db_connect():
     mydb = connection.connect(
