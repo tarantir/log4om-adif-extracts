@@ -40,7 +40,6 @@ import csv
 import os
 import configparser
 import getpass
-#import pandas as pd
 import mysql.connector as connection
 
 DBHOST = ""
@@ -119,7 +118,7 @@ def do_standard_adif():
     s_adif = s_cursor.fetchall()
     with open(S_ADIF_PATH, 'w') as f_out:
         for row in s_adif:
-            row = str(row).strip('(\'').strip('\'\,)')
+            row = str(row).strip('(\'').strip('\',)')
             f_out.write('%s\n' % row)
     print("Exported Standard ADIF Rows:", len(s_adif))
 
@@ -133,7 +132,7 @@ def do_wsjtx_adif():
     w_adif = s_cursor.fetchall()
     with open(W_ADIF_PATH, 'w') as f_out:
         for row in w_adif:
-            row = str(row).strip('(\'').strip('\'\,)')
+            row = str(row).strip('(\'').strip('\',)')
             f_out.write('%s\n' % row)
     print("Exported WSJTX ADIF Rows:", len(w_adif))
 
