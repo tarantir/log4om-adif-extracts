@@ -53,7 +53,7 @@ select
         else ''
     end,
     case
-        when octet_length(`l`.`cnty`) > 0 then CONCAT(' <CNTY:', octet_length(`l`.`cnty`), '>', `l`.`cnty`)
+        when octet_length(`l`.`cnty`) > 0 then CONCAT(' <CNTY:', octet_length(trim(SUBSTRING_INDEX(`l`.`cnty`, '//', -1))), '>', trim(SUBSTRING_INDEX(`l`.`cnty`, '//', -1)))
         else ''
     end,
     case
