@@ -21,7 +21,7 @@ select
         else ''
     end,
     case
-        when octet_length(`l`.`address`) > 0 then CONCAT(' <ADDRESS:', octet_length(replace(`l`.`address`, '\r\n', ' ')), '>', replace(`l`.`address`, '\r\n', ' '))
+        when octet_length(`l`.`address`) > 0 then CONCAT(' <ADDRESS:', octet_length(replace(`l`.`address`, '\r\n', '')), '>', replace(`l`.`address`, '\r\n', ''))
         else ''
     end,
     case
@@ -41,7 +41,7 @@ select
         else ''
     end,
     case
-        when octet_length(`l`.`comment`) > 0 then CONCAT(' <COMMENT:', octet_length(replace(replace(`l`.`comment`, '\r', ' '), '\n', ' ')), '>', replace(replace(`l`.`comment`, '\r', ' '), '\n', ' '))
+        when octet_length(`l`.`comment`) > 0 then CONCAT(' <COMMENT:', octet_length(replace(replace(`l`.`comment`, '\r', ''), '\n', '')), '>', replace(replace(`l`.`comment`, '\r', ''), '\n', ''))
         else ''
     end,
     case
