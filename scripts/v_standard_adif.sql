@@ -300,12 +300,16 @@ select
         when octet_length(`q`.`hamqthsent`) > 0 then CONCAT(' <HAMQTH_QSO_UPLOAD_STATUS:', octet_length(`q`.`hamqthsent`), '>', `q`.`hamqthsent`)
         else ''
     end,
+    case
+        when octet_length(`t`.`iota`) > 0 then CONCAT(' <IOTA:', octet_length(`t`.`iota`), '>', `t`.`iota`)
+        else ''
+    end,
     ' <EOR>') AS `ADIF`
 from
-    (`log4om2`.`log` `l`
-join `radio`.`v_qso_confirmations` `q`)
-where
-    `l`.`callsign` <> ''
-    and `l`.`qsoid` = `q`.`qsoid`
+    ((`log4om2`.`log` `l`
+left join `radio`.`v_qso_confirmations` `q` on
+    (`l`.`qsoid` = `q`.`qsoid`))
+left join `radio`.`v_qso_iota` `t` on
+    (`l`.`qsoid` = `t`.`qsoid`))
 order by
-    `l`.`qsodate` desc
+    `l`.`qsodate` desc;
