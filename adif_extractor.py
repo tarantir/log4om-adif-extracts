@@ -46,6 +46,7 @@ DBHOST = ""
 DBNAME = ""
 DBUSER = ""
 DBPASS = ""
+DBPORT = ""
 S_ADIF_PATH = ""
 W_ADIF_PATH = ""
 W_LOG_PATH = ""
@@ -63,6 +64,7 @@ try:
     DBHOST = config["GENERAL"]["DBHOST"]
     DBNAME = config["GENERAL"]["DBNAME"]
     DBUSER = config["GENERAL"]["DBUSER"]
+    DBPORT = config["GENERAL"]["DBPORT"]
     S_ADIF_PATH = config["GENERAL"]["S_ADIF_PATH"]
     W_ADIF_PATH = config["GENERAL"]["W_ADIF_PATH"]
     W_LOG_PATH = config["GENERAL"]["W_LOG_PATH"]
@@ -73,6 +75,7 @@ if (
     DBHOST == ""
     or DBNAME == ""
     or DBUSER == ""
+    or DBPORT == ""
     or S_ADIF_PATH == ""
     or W_ADIF_PATH == ""
     or W_LOG_PATH == ""
@@ -81,6 +84,7 @@ if (
     DBHOST = input("DBHOST : ")
     DBNAME = input("DBNAME : ")
     DBUSER = input("DBUSER : ")
+    DBPORT = input("DBPORT : ")
     S_ADIF_PATH = input("Standard ADIF Extract File (e.g. /ADIF/STDADIF.adi) : ")
     W_ADIF_PATH = input("Standard ADIF Extract File (e.g. /ADIF/wsjtx.adi) : ")
     W_LOG_PATH = input("Standard ADIF Extract File (e.g. /ADIF/wsjtx.log) : ")
@@ -89,6 +93,7 @@ if (
     config.set("GENERAL", "DBHOST", DBHOST)
     config.set("GENERAL", "DBNAME", DBNAME)
     config.set("GENERAL", "DBUSER", DBUSER)
+    config.set("GENERAL", "DBPORT", DBPORT)
     config.set("GENERAL", "S_ADIF_PATH", S_ADIF_PATH)
     config.set("GENERAL", "W_ADIF_PATH", W_ADIF_PATH)
     config.set("GENERAL", "W_LOG_PATH", W_LOG_PATH)
@@ -152,7 +157,7 @@ def do_wsjtx_log():
 
 def do_db_connect():
     mydb = connection.connect(
-        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, use_pure=True
+        host=DBHOST, database=DBNAME, user=DBUSER, passwd=DBPASS, port=DBPORT, use_pure=True
     )
     return mydb
 
